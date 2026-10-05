@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Senati ETI - Sistema de Gestión de Visitas</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- 1. Bootstrap 5 (CSS Nativo) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <!-- 2. Bootstrap Icons (Nativo) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- ======================================================== -->
+  <!-- 3. CAPA DE ESTILOS SEPARADA: IDENTIDAD CORPORATIVA SENATI -->
+  <!--    Clean UI, Flat Design y Variables CSS Personalizadas  -->
+  <!-- ======================================================== -->
+  <style>
+    :root {
+      /* Paleta Corporativa Oficial SENATI */
+      --senati-blue: #003882;
+      --senati-navy: #00224f;
+      --senati-dark-blue: #001a3d;
+      --senati-accent-blue: #0056b3;
+      --senati-light-blue: #e7f0fa;
+      
+      /* Fondos y Neutros Minimalistas */
+      --senati-bg: #f8f9fa;
+      --senati-card-bg: #ffffff;
+      --senati-border-color: #e5e7eb;
+      --senati-border-subtle: #f1f3f5;
+      --senati-text-primary: #1f2937;
+      --senati-text-muted: #6b7280;
+
+      /* Colores Semánticos Sobrios */
+      --senati-success: #198754;
+      --senati-success-light: #e8f5e9;
+      --senati-warning: #d97706;
+      --senati-warning-light: #fef3c7;
+      --senati-danger: #dc3545;
+      --senati-danger-light: #fee2e2;
+      --senati-info: #0284c7;
+      --senati-info-light: #e0f2fe;
+
+      /* Integración con Variables Bootstrap 5 */
+      --bs-primary: #003882;
+      --bs-primary-rgb: 0, 56, 130;
+      --bs-body-font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --bs-body-bg: var(--senati-bg);
+      --bs-body-color: var(--senati-text-primary);
+    }
+
+    body {
+      font-family: var(--bs-body-font-family);
+      background-color: var(--senati-bg);
+      color: var(--senati-text-primary);
+      letter-spacing: -0.01em;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Barra Superior de Control */
+    .senati-topbar {
+      background-color: #0f172a;
+      color: #e2e8f0;
+      font-size: 0.8125rem;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    /* Barra de Navegación Institucional SENATI */
+    .senati-navbar {
+      background-color: var(--senati-blue);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Enfoque Flat Design (Diseño Plano, Sin Sombras Pesadas) */
+    .card-flat {
+      background-color: var(--senati-card-bg);
+      border: 1px solid var(--senati-border-color);
+      border-radius: 0.625rem;
+      box-shadow: none !important;
+      transition: border-color 0.2s ease;
+    }
+    .card-flat:hover {
+      border-color: #cbd5e1;
+    }
+
+    /* Tarjetas de Métricas KPI */
+    .kpi-card {
+      background-color: var(--senati-card-bg);
+      border: 1px solid var(--senati-border-color);
+      border-radius: 0.625rem;
+      padding: 1.25rem 1rem;
+      text-align: center;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .kpi-card:hover {
+      border-color: #cbd5e1;
+      transform: translateY(-2px);
+    }
+    .kpi-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--senati-text-muted);
+      margin-bottom: 0.35rem;
+    }
+    .kpi-value {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    /* Botones Institucionales Sobrios */
+    .btn-senati-primary {
+      background-color: var(--senati-blue);
+      border-color: var(--senati-blue);
+      color: #ffffff;
+      font-weight: 600;
+      border-radius: 0.5rem;
+    }
+    .btn-senati-primary:hover {
+      background-color: var(--senati-navy);
+      border-color: var(--senati-navy);
+      color: #ffffff;
+    }
+    .btn-export-green {
+      background-color: var(--senati-success);
+      border-color: var(--senati-success);
+      color: #ffffff;
+      font-weight: 500;
+      border-radius: 0.5rem;
+      font-size: 0.8125rem;
+      transition: background-color 0.15s ease;
+    }
+    .btn-export-green:hover {
+      background-color: #146c43;
+      border-color: #146c43;
+      color: #ffffff;
+    }
+    .btn-export-darkgreen {
+      background-color: #0f5132;
+      border-color: #0f5132;
+      color: #ffffff;
+      font-weight: 500;
+      border-radius: 0.5rem;
+      font-size: 0.8125rem;
+    }
+    .btn-export-darkgreen:hover {
+      background-color: #0b3d26;
+      border-color: #0b3d26;
+      color: #ffffff;
+    }
+
+    /* Pestañas de Flujo de Trabajo (Workflow Tabs) */
+    .nav-workflow .nav-link {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--senati-text-muted);
+      background-color: #e9ecef;
+      border-radius: 0.5rem;
+      padding: 0.6rem 1.25rem;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+    }
+    .nav-workflow .nav-link.active {
+      background-color: var(--senati-blue);
+      color: #ffffff;
+    }
+    .nav-workflow .nav-link:hover:not(.active) {
+      background-color: #dee2e6;
+      color: var(--senati-text-primary);
+    }
+
+    /* Tabla de Datos Limpia (Clean UI Table) */
+    .table-senati {
+      margin-bottom: 0;
+      vertical-align: middle;
+    }
+    .table-senati th {
+      background-color: #f8fafc;
+      color: #475569;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--senati-border-color);
+      white-space: nowrap;
+    }
+    .table-senati td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--senati-border-subtle);
+      font-size: 0.8125rem;
+      color: var(--senati-text-primary);
+    }
+    .table-senati tr:hover td {
+      background-color: #f8fafc;
+    }
+
+    /* Badges Semánticos Minimalistas */
+    .badge-subtle-primary {
+      background-color: var(--senati-light-blue);
+      color: var(--senati-blue);
+      font-weight: 600;
+      border: 1px solid rgba(0, 56, 130, 0.15);
+    }
+    .badge-subtle-success {
+      background-color: var(--senati-success-light);
+      color: var(--senati-success);
+      font-weight: 600;
+      border: 1px solid rgba(25, 135, 84, 0.2);
+    }
+    .badge-subtle-warning {
+      background-color: var(--senati-warning-light);
+      color: #92400e;
+      font-weight: 600;
+      border: 1px solid rgba(217, 119, 6, 0.2);
+    }
+    .badge-subtle-danger {
+      background-color: var(--senati-danger-light);
+      color: #b91c1c;
+      font-weight: 600;
+      border: 1px solid rgba(220, 53, 69, 0.2);
+    }
+
+    /* Tabla de Alertas de Auditoría (Tiempos Excedidos) */
+    .audit-alert-table th {
+      background-color: #fef2f2;
+      color: #991b1b;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #fecaca;
+    }
+    .audit-alert-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #fee2e2;
+      font-size: 0.8125rem;
+    }
+    .audit-alert-table tr:hover td {
+      background-color: #fff1f2;
+    }
+
+    /* Tótem QR Minimalista */
+    .qr-kiosk-wrapper {
+      background-color: #f8fafc;
+      min-height: calc(100vh - 100px);
+    }
+    .qr-card {
+      max-width: 420px;
+      background-color: #ffffff;
+      border: 1px solid var(--senati-border-color);
+      border-radius: 1rem;
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+    .qr-box {
+      width: 220px;
+      height: 220px;
+      margin: 0 auto;
+      padding: 0.75rem;
+      background-color: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .qr-box:hover {
+      transform: scale(1.02);
+      border-color: var(--senati-blue);
+    }
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  <!-- ======================================================== -->
+  <!-- 1. BARRA SUPERIOR DE CONTROL Y NAVEGACIÓN GLOBAL         -->
+  <!-- ======================================================== -->
+  <header class="senati-topbar py-2 px-3 px-lg-4 d-flex flex-wrap justify-content-between align-items-center gap-2">
+    <div class="d-flex align-items-center gap-3">
+      <div class="d-flex align-items-center gap-2">
+        <span class="badge bg-primary px-2 py-1 text-uppercase fw-bold" style="letter-spacing: 0.05em;">SENATI</span>
+        <span class="fw-semibold text-white">ETI - Sistema de Gestión de Visitas</span>
+      </div>
+      <span class="text-secondary d-none d-sm-inline">|</span>
+      <div class="d-none d-md-flex align-items-center gap-2 text-secondary small">
+        <i class="bi bi-clock text-info"></i>
+        <span id="liveClockDisplay">Cargando fecha y hora...</span>
+      </div>
+    </div>
+
+    <!-- Switcher de Módulos (Vistas Principales) -->
+    <div class="d-flex align-items-center gap-1 bg-dark p-1 rounded-2 border border-secondary border-opacity-25">
+      <button type="button" onclick="switchView('qr')" id="nav-btn-qr" class="btn btn-sm btn-outline-light d-flex align-items-center gap-1 border-0">
+        <i class="bi bi-qr-code"></i>
+        <span class="d-none d-sm-inline">1. Auto-registro (QR)</span>
+      </button>
+      <button type="button" onclick="switchView('empleado')" id="nav-btn-empleado" class="btn btn-sm btn-light text-dark active d-flex align-items-center gap-1 border-0 fw-semibold">
+        <i class="bi bi-person-workspace"></i>
+        <span class="d-none d-sm-inline">2. Panel Empleado</span>
+      </button>
+      <button type="button" onclick="switchView('admin')" id="nav-btn-admin" class="btn btn-sm btn-outline-light d-flex align-items-center gap-1 border-0">
+        <i class="bi bi-shield-lock"></i>
+        <span class="d-none d-sm-inline">3. Dashboard Admin</span>
+      </button>
+    </div>
+
+    <!-- Controles Rápidos de Apoyo -->
+    <div class="d-flex align-items-center gap-2">
+      <button type="button" onclick="generateRandomVisit()" class="btn btn-sm btn-outline-info text-nowrap d-flex align-items-center gap-1 py-1" title="Simular la llegada de un visitante escaneando QR">
+        <i class="bi bi-lightning-charge"></i>
+        <span class="d-none d-lg-inline">Simular Llegada</span>
+      </button>
+      <button type="button" onclick="openDocumentationModal()" class="btn btn-sm btn-outline-secondary text-nowrap d-flex align-items-center gap-1 py-1 text-light" title="Ver Memoria Técnica de T8.pdf">
+        <i class="bi bi-file-earmark-text"></i>
+        <span class="d-none d-lg-inline">Rúbrica T8</span>
+      </button>
+    </div>
+  </header>
+
+
+  <!-- CONTENEDOR PRINCIPAL DE VISTAS -->
+  <main class="flex-grow-1">
+
+    <!-- ======================================================== -->
+    <!-- VISTA 1: MÓDULO DE AUTO-REGISTRO QR (TÓTEM MINIMALISTA) -->
+    <!-- ======================================================== -->
+    <section id="view-qr" class="qr-kiosk-wrapper d-none d-flex align-items-center justify-content-center p-3">
+      <div class="qr-card shadow-sm">
+        
+        <!-- Emblema de Servicio -->
+        <div class="d-inline-flex align-items-center justify-content-center bg-light text-primary rounded-3 p-3 mb-3 border">
+          <i class="bi bi-plus-lg fs-3 text-primary"></i>
+        </div>
+
+        <!-- Títulos institucionales limpios -->
+        <h1 class="h3 fw-bold text-dark mb-1">Senati ETI</h1>
+        <p class="text-muted small mb-4">Sistema de Gestión de Visitas</p>
+
+        <!-- Cuadro Central del Código QR (Flat & Minimal) -->
+        <div class="qr-box mb-3 d-flex align-items-center justify-content-center" onclick="openQrSimulatorModal()" title="Haz clic para registrarte como visitante">
+          <svg viewBox="0 0 200 200" class="w-100 h-100">
+            <rect width="200" height="200" fill="#ffffff" />
+            <!-- Patrones Guía QR -->
+            <rect x="15" y="15" width="46" height="46" fill="#003882" rx="4" />
+            <rect x="23" y="23" width="30" height="30" fill="#ffffff" rx="2" />
+            <rect x="31" y="31" width="14" height="14" fill="#003882" />
+            <rect x="139" y="15" width="46" height="46" fill="#003882" rx="4" />
+            <rect x="147" y="23" width="30" height="30" fill="#ffffff" rx="2" />
+            <rect x="155" y="31" width="14" height="14" fill="#003882" />
+            <rect x="15" y="139" width="46" height="46" fill="#003882" rx="4" />
+            <rect x="23" y="147" width="30" height="30" fill="#ffffff" rx="2" />
+            <rect x="31" y="155" width="14" height="14" fill="#003882" />
+            <!-- Módulos de Datos -->
+            <rect x="75" y="20" width="10" height="10" fill="#1f2937" />
+            <rect x="95" y="20" width="10" height="20" fill="#1f2937" />
+            <rect x="115" y="30" width="10" height="10" fill="#003882" />
+            <rect x="75" y="45" width="20" height="10" fill="#1f2937" />
+            <rect x="20" y="75" width="10" height="20" fill="#1f2937" />
+            <rect x="40" y="75" width="20" height="10" fill="#003882" />
+            <rect x="75" y="75" width="50" height="50" fill="#003882" rx="6" />
+            <circle cx="100" cy="100" r="16" fill="#ffffff" />
+            <text x="100" y="105" font-size="13" font-weight="900" fill="#003882" text-anchor="middle" font-family="Arial">S</text>
+            <rect x="135" y="75" width="15" height="15" fill="#1f2937" />
+            <rect x="160" y="75" width="20" height="10" fill="#1f2937" />
+            <rect x="140" y="100" width="20" height="20" fill="#003882" />
+            <rect x="170" y="100" width="15" height="20" fill="#1f2937" />
+            <rect x="75" y="135" width="10" height="20" fill="#1f2937" />
+            <rect x="95" y="145" width="20" height="10" fill="#1f2937" />
+            <rect x="135" y="135" width="20" height="10" fill="#003882" />
+            <rect x="165" y="135" width="15" height="15" fill="#1f2937" />
+            <rect x="75" y="170" width="40" height="10" fill="#1f2937" />
+            <rect x="130" y="160" width="20" height="20" fill="#1f2937" />
+            <rect x="160" y="160" width="20" height="20" fill="#003882" />
+          </svg>
+        </div>
+
+        <p class="text-secondary small mb-4">
+          <i class="bi bi-phone me-1"></i> Escanea para registrar tu visita
+        </p>
+
+        <hr class="text-muted opacity-25 my-4">
+
+        <!-- Enlaces inferiores sobrios -->
+        <div class="d-flex justify-content-center gap-4">
+          <button type="button" onclick="switchView('admin')" class="btn btn-link text-decoration-none text-muted small p-0 fw-medium">
+            <i class="bi bi-shield-lock text-primary me-1"></i> Administrador
+          </button>
+          <button type="button" onclick="switchView('empleado')" class="btn btn-link text-decoration-none text-muted small p-0 fw-medium">
+            <i class="bi bi-person-badge text-primary me-1"></i> Empleado
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!-- VISTA 2: PANEL DE EMPLEADO (REFACTORIZADO A BOOTSTRAP 5) -->
+    <!-- ======================================================== -->
+    <section id="view-empleado" class="d-flex flex-column">
+
+      <!-- Barra de Identidad del Empleado (Azul Marino SENATI) -->
+      <nav class="senati-navbar text-white py-3 px-3 px-lg-5">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+          
+          <!-- Identificación del Colaborador -->
+          <div class="d-flex align-items-center gap-3">
+            <div class="rounded-circle bg-white bg-opacity-10 border border-white border-opacity-25 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+              <i class="bi bi-person-vcard fs-5 text-white"></i>
+            </div>
+            <div>
+              <h1 class="h5 fw-bold mb-0 text-white">Panel Empleado</h1>
+              <p class="small text-white-50 mb-0">Carlos Rodríguez López (EMP001)</p>
+            </div>
+          </div>
+
+          <!-- Botones de Acción Rápida (Semántica Sobria) -->
+          <div class="d-flex flex-wrap align-items-center gap-2">
+            <button type="button" onclick="switchView('admin')" class="btn btn-sm btn-light d-flex align-items-center gap-2 fw-semibold px-3 py-2">
+              <i class="bi bi-speedometer2 text-primary"></i>
+              <span>Modo Admin</span>
+            </button>
+            <button type="button" onclick="openRegisterVisitModal()" class="btn btn-sm btn-success d-flex align-items-center gap-2 fw-semibold px-3 py-2">
+              <i class="bi bi-plus-circle"></i>
+              <span>Registrar Visita</span>
+            </button>
+            <button type="button" onclick="switchView('qr')" class="btn btn-sm btn-danger d-flex align-items-center gap-2 fw-semibold px-3 py-2">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>Salir</span>
+            </button>
+          </div>
+
+        </div>
+      </nav>
+
+      <!-- Contenido Principal: Espaciado y Whitespace Limpio -->
+      <div class="container-fluid px-3 px-lg-5 py-4">
+
+        <!-- ========================================== -->
+        <!-- TARJETAS DE MÉTRICAS (6 KPIS PLANOS)       -->
+        <!-- ========================================== -->
+        <div class="row g-3 mb-4">
+          <!-- 1. Mis Atenciones -->
+          <div class="col-6 col-md-4 col-xl-2">
+            <div class="kpi-card">
+              <div class="kpi-title">Mis Atenciones</div>
+              <div id="kpi-emp-atenciones" class="kpi-value text-primary">0</div>
+            </div>
+          </div>
+          <!-- 2. Completadas -->
+          <div class="col-6 col-md-4 col-xl-2">
+            <div class="kpi-card">
+              <div class="kpi-title">Completadas</div>
+              <div id="kpi-emp-completadas" class="kpi-value text-success">0</div>
+            </div>
+          </div>
+          <!-- 3. Efectividad -->
+          <div class="col-6 col-md-4 col-xl-2">
+            <div class="kpi-card">
+              <div class="kpi-title">Efectividad</div>
+              <div id="kpi-emp-efectividad" class="kpi-value text-dark">0%</div>
+            </div>
+          </div>
+          <!-- 4. En Proceso -->
+          <div class="col-6 col-md-4 col-xl-2">
+            <div class="kpi-card">
+              <div class="kpi-title">En Proceso</div>
+              <div id="kpi-emp-proceso" class="kpi-value text-warning">0</div>
+            </div>
+          </div>
+          <!-- 5. Matrícula -->
+          <div class="col-6 col-md-4 col-xl-2">
+            <div class="kpi-card">
+              <div class="kpi-title">Matrícula</div>
+              <div id="kpi-emp-matricula" class="kpi-value text-primary">0</div>
+            </div>
+          </div>
+          <!-- 6. Pagos / Tutoría / Otros -->
+          <div class="col-6 col-md-4 col-xl-2">
+            <div class="kpi-card">
+              <div class="kpi-title">Pagos/Tutoría/Otros</div>
+              <div id="kpi-emp-otros" class="kpi-value text-success">0</div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- ========================================== -->
+        <!-- BARRA DE FILTROS DE CLASIFICACIÓN Y EXPORT -->
+        <!-- ========================================== -->
+        <div class="card card-flat p-4 mb-4">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <i class="bi bi-funnel text-primary fs-5"></i>
+            <h2 class="h6 fw-bold mb-0 text-dark">Filtros de Clasificación</h2>
+          </div>
+
+          <!-- Grilla de Selectores Nativos BS5 -->
+          <div class="row g-2 mb-3">
+            <!-- Asunto -->
+            <div class="col-12 col-sm-6 col-lg-3">
+              <select id="filter-asunto" class="form-select form-select-sm">
+                <option value="">Todos los asuntos</option>
+                <option value="Matrícula">Matrícula</option>
+                <option value="Pagos">Pagos</option>
+                <option value="Tutoría">Tutoría</option>
+                <option value="Consultas de Notas">Consultas de Notas</option>
+                <option value="Otros">Otros</option>
+              </select>
+            </div>
+            <!-- Estado -->
+            <div class="col-12 col-sm-6 col-lg-3">
+              <select id="filter-estado" class="form-select form-select-sm">
+                <option value="">Todos los estados</option>
+                <option value="En Proceso">En Proceso</option>
+                <option value="Completada">Completada</option>
+                <option value="En Espera">En Espera</option>
+              </select>
+            </div>
+            <!-- Prioridad -->
+            <div class="col-12 col-sm-6 col-lg-2">
+              <select id="filter-prioridad" class="form-select form-select-sm">
+                <option value="">Todas las prioridades</option>
+                <option value="Alta">Alta</option>
+                <option value="Media">Media</option>
+                <option value="Baja">Baja</option>
+                <option value="Urgente">Urgente</option>
+              </select>
+            </div>
+            <!-- Fecha -->
+            <div class="col-12 col-sm-6 col-lg-2">
+              <input type="date" id="filter-fecha" class="form-control form-control-sm">
+            </div>
+            <!-- Botón Filtrar -->
+            <div class="col-12 col-lg-2">
+              <button type="button" onclick="renderEmployeeTable()" class="btn btn-sm btn-senati-primary w-100 d-flex align-items-center justify-content-center gap-2">
+                <i class="bi bi-search"></i>
+                <span>Filtrar</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Botón Limpiar Filtros -->
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <button type="button" onclick="clearFilters()" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
+              <i class="bi bi-eraser"></i>
+              <span>Limpiar</span>
+            </button>
+          </div>
+
+          <hr class="text-muted opacity-25 my-2">
+
+          <!-- Botones de Exportación CSV/Excel -->
+          <div class="d-flex flex-wrap align-items-center gap-2 pt-2">
+            <button type="button" onclick="exportData('mes')" class="btn btn-export-green d-flex align-items-center gap-1">
+              <i class="bi bi-file-earmark-spreadsheet"></i>
+              <span>Exportar Mes</span>
+            </button>
+            <button type="button" onclick="exportData('trimestre')" class="btn btn-export-green d-flex align-items-center gap-1">
+              <i class="bi bi-calendar-check"></i>
+              <span>Exportar Trimestre</span>
+            </button>
+            <button type="button" onclick="exportData('filtrado')" class="btn btn-export-darkgreen d-flex align-items-center gap-1">
+              <i class="bi bi-file-earmark-arrow-down"></i>
+              <span>Exportar Filtrado</span>
+            </button>
+            <span id="exportNotification" class="text-success small fw-medium ms-2 d-none">
+              <i class="bi bi-check2-circle"></i> Archivo exportado con éxito
+            </span>
+          </div>
+
+        </div>
+
+
+        <!-- ========================================== -->
+        <!-- PESTAÑAS DE FLUJO DE TRABAJO (TABS)        -->
+        <!-- ========================================== -->
+        <ul class="nav nav-workflow d-flex gap-2 mb-3">
+          <li class="nav-item">
+            <button type="button" id="tab-btn-asignadas" onclick="setEmployeeTab('asignadas')" class="nav-link active d-flex align-items-center gap-2">
+              <i class="bi bi-person-check"></i>
+              <span>Mis Visitas Asignadas</span>
+              <span id="badge-count-asignadas" class="badge bg-white text-primary rounded-pill small">0</span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <button type="button" id="tab-btn-disponibles" onclick="setEmployeeTab('disponibles')" class="nav-link d-flex align-items-center gap-2">
+              <i class="bi bi-inbox"></i>
+              <span>Visitas Disponibles</span>
+              <span id="badge-count-disponibles" class="badge bg-secondary rounded-pill small">0</span>
+            </button>
+          </li>
+        </ul>
+
+
+        <!-- ========================================== -->
+        <!-- TABLA DE DATOS PRINCIPAL (CLEAN & FLAT)   -->
+        <!-- ========================================== -->
+        <div class="card card-flat overflow-hidden">
+          
+          <div class="p-3 px-4 border-bottom bg-white d-flex justify-content-between align-items-center">
+            <div>
+              <h3 id="tableSectionTitle" class="h6 fw-bold mb-0 text-dark">
+                <i class="bi bi-person-check text-primary me-2"></i>Mis Visitas Asignadas
+              </h3>
+              <p id="tableSectionSubtitle" class="text-muted small mb-0">Responde las consultas y actualiza el estado de las visitas.</p>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-senati table-hover align-middle">
+              <thead>
+                <tr>
+                  <th scope="col">Código</th>
+                  <th scope="col">Visitante</th>
+                  <th scope="col">Asunto</th>
+                  <th scope="col" style="min-width: 180px;">Consulta</th>
+                  <th scope="col" style="min-width: 180px;">Respuesta</th>
+                  <th scope="col">Prioridad</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col">Fecha</th>
+                  <th scope="col" class="text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="employeeTableBody">
+                <!-- Inyección dinámica -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Empty State -->
+          <div id="tableEmptyState" class="p-5 text-center text-muted d-none">
+            <i class="bi bi-inbox fs-2 text-secondary opacity-50 mb-2 d-block"></i>
+            <p class="small mb-0">No se encontraron visitas que coincidan con los criterios seleccionados.</p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!-- VISTA 3: DASHBOARD ADMINISTRADOR (SUPERVISIÓN GERENCIAL) -->
+    <!-- ======================================================== -->
+    <section id="view-admin" class="d-none">
+
+      <!-- Header del Administrador -->
+      <div class="bg-white border-bottom py-3 px-3 px-lg-5">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+          <div>
+            <div class="d-flex align-items-center gap-2">
+              <h1 class="h5 fw-bold mb-0 text-dark">Dashboard de Supervisión Gerencial</h1>
+              <span class="badge bg-light text-secondary border">Auditoría en Tiempo Real</span>
+            </div>
+            <p class="text-muted small mb-0">Monitoreo de tiempos de espera, resolución y distribución operativa por sede</p>
+          </div>
+
+          <div class="d-flex align-items-center gap-2">
+            <button type="button" onclick="generateRandomVisit()" class="btn btn-sm btn-senati-primary d-flex align-items-center gap-1">
+              <i class="bi bi-person-plus"></i>
+              <span>Simular Llegada QR</span>
+            </button>
+            <button type="button" onclick="toggleAutoSimulation()" id="btnAutoSim" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
+              <i class="bi bi-play-circle text-success"></i>
+              <span id="autoSimText">Auto-Tráfico (OFF)</span>
+            </button>
+            <button type="button" onclick="switchView('empleado')" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1">
+              <i class="bi bi-arrow-left"></i>
+              <span>Volver a Empleado</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Métricas Globales y Gráficos -->
+      <div class="container-fluid px-3 px-lg-5 py-4">
+
+        <!-- 4 KPIS GLOBALES ESTRATÉGICOS -->
+        <div class="row g-3 mb-4">
+          <!-- 1. Visitantes Activos -->
+          <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card card-flat p-3 p-xl-4 h-100">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="kpi-title mb-0">Visitantes Activos</span>
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-circle p-2">
+                  <i class="bi bi-people"></i>
+                </span>
+              </div>
+              <div class="d-flex align-items-baseline gap-2">
+                <span id="admin-kpi-activos" class="fs-2 fw-bold text-dark">45</span>
+                <span class="small text-muted">en sede</span>
+              </div>
+              <p id="admin-kpi-activos-sub" class="small text-muted mt-2 mb-0">
+                12 en espera • 33 en atención
+              </p>
+            </div>
+          </div>
+
+          <!-- 2. Tiempo Promedio de Espera -->
+          <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card card-flat p-3 p-xl-4 h-100">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="kpi-title mb-0">Tiempo Prom. Espera</span>
+                <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-circle p-2">
+                  <i class="bi bi-hourglass-split"></i>
+                </span>
+              </div>
+              <div class="d-flex align-items-baseline gap-2">
+                <span id="admin-kpi-espera" class="fs-2 fw-bold text-dark">12.5</span>
+                <span class="small fw-semibold text-warning">min</span>
+              </div>
+              <p class="small text-muted mt-2 mb-0">
+                <i class="bi bi-qr-code me-1"></i> Desde escaneo QR hasta toma
+              </p>
+            </div>
+          </div>
+
+          <!-- 3. Tiempo Promedio de Resolución -->
+          <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card card-flat p-3 p-xl-4 h-100">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="kpi-title mb-0">Tiempo Prom. Resolución</span>
+                <span class="badge bg-info-subtle text-info border border-info-subtle rounded-circle p-2">
+                  <i class="bi bi-stopwatch"></i>
+                </span>
+              </div>
+              <div class="d-flex align-items-baseline gap-2">
+                <span id="admin-kpi-resolucion" class="fs-2 fw-bold text-dark">8.2</span>
+                <span class="small fw-semibold text-info">min</span>
+              </div>
+              <p class="small text-muted mt-2 mb-0">
+                <i class="bi bi-check2-all me-1"></i> Duración neta en ventanilla
+              </p>
+            </div>
+          </div>
+
+          <!-- 4. Tasa de Efectividad Global -->
+          <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card card-flat p-3 p-xl-4 h-100">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="kpi-title mb-0">Efectividad Global</span>
+                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-circle p-2">
+                  <i class="bi bi-graph-up-arrow"></i>
+                </span>
+              </div>
+              <div class="d-flex align-items-baseline gap-2">
+                <span id="admin-kpi-efectividad" class="fs-2 fw-bold text-success">94.3%</span>
+                <span class="small text-muted">Meta: 90%</span>
+              </div>
+              <p class="small text-muted mt-2 mb-0">
+                <i class="bi bi-trophy me-1 text-success"></i> Consultas resueltas vs abandonadas
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FILA DE GRÁFICOS ANALÍTICOS (CHART.JS) -->
+        <div class="row g-3 mb-4">
+          <!-- Gráfico 1: Horas Pico -->
+          <div class="col-12 col-lg-8">
+            <div class="card card-flat p-4 h-100">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                  <h3 class="h6 fw-bold mb-0 text-dark">Mapa de Horas Pico - Volumen de Visitas Diarias</h3>
+                  <p class="text-muted small mb-0">Identificación de afluencia diurna para mitigar la saturación en recepción</p>
+                </div>
+                <span class="badge bg-light text-secondary border">08:00 - 20:00</span>
+              </div>
+              <div style="position: relative; height: 260px;">
+                <canvas id="chartHorasPico"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gráfico 2: Distribución por Asunto (Doughnut) -->
+          <div class="col-12 col-lg-4">
+            <div class="card card-flat p-4 h-100 d-flex flex-column">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <h3 class="h6 fw-bold mb-0 text-dark">Distribución por Asunto</h3>
+                <span class="badge bg-light text-secondary border">Tipificación</span>
+              </div>
+              <p class="text-muted small mb-3">Motivos de consulta de visitantes</p>
+              <div class="flex-grow-1 d-flex align-items-center justify-content-center" style="position: relative; min-height: 180px;">
+                <canvas id="chartAsuntos"></canvas>
+              </div>
+              <div id="donutLegend" class="row g-2 pt-3 border-top mt-2">
+                <!-- Leyenda inyectada dinámicamente -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FILA DE RENDIMIENTO Y AUDITORÍA DE TIEMPOS -->
+        <div class="row g-3">
+          <!-- Gráfico 3: Rendimiento por Colaborador -->
+          <div class="col-12 col-lg-6">
+            <div class="card card-flat p-4 h-100">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                  <h3 class="h6 fw-bold mb-0 text-dark">Rendimiento Mensual por Colaborador</h3>
+                  <p class="text-muted small mb-0">Comparativa de atenciones completadas vs en proceso</p>
+                </div>
+                <span class="badge bg-light text-secondary border">Octubre 2026</span>
+              </div>
+              <div style="position: relative; height: 260px;">
+                <canvas id="chartColaboradores"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- TABLA DE ALERTAS DE AUDITORÍA (TIEMPOS LÍMITE EXCEDIDOS) -->
+          <div class="col-12 col-lg-6">
+            <div class="card card-flat p-4 h-100 border-danger-subtle d-flex flex-column">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div>
+                  <h3 class="h6 fw-bold text-danger mb-0 d-flex align-items-center gap-2">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <span>Alertas de Auditoría - Tiempos Excedidos</span>
+                  </h3>
+                  <p class="text-muted small mb-0">Tickets en espera que sobrepasan la tolerancia SLA (&gt; 15.0 min)</p>
+                </div>
+                <span id="alertsCountBadge" class="badge bg-danger">0 Críticas</span>
+              </div>
+
+              <div class="table-responsive flex-grow-1 mt-2">
+                <table class="table audit-alert-table align-middle">
+                  <thead>
+                    <tr>
+                      <th scope="col">Ticket</th>
+                      <th scope="col">Visitante</th>
+                      <th scope="col">Asunto</th>
+                      <th scope="col">Espera</th>
+                      <th scope="col">Prioridad</th>
+                      <th scope="col" class="text-center">Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminAlertsTableBody">
+                    <!-- Filas dinámicas -->
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="pt-3 border-top d-flex justify-content-between align-items-center">
+                <span class="small text-muted">Umbral de Atención: <b>15.0 min</b></span>
+                <button type="button" onclick="resolveAllCriticalAlerts()" class="btn btn-sm btn-danger py-1 px-3 d-flex align-items-center gap-1">
+                  <i class="bi bi-megaphone"></i>
+                  <span>Reasignar Tickets Excedidos</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- ======================================================== -->
+  <!-- MODAL: REGISTRAR VISITA (Nativo Bootstrap 5)             -->
+  <!-- ======================================================== -->
+  <div class="modal fade" id="modalRegisterVisit" tabindex="-1" aria-labelledby="modalRegisterVisitLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-sm rounded-3">
+        <div class="modal-header border-bottom py-3">
+          <h2 class="modal-title h6 fw-bold text-dark mb-0 d-flex align-items-center gap-2" id="modalRegisterVisitLabel">
+            <i class="bi bi-pencil-square text-success"></i>
+            <span>Registrar Nueva Visita</span>
+          </h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <form id="formNewVisit" onsubmit="handleNewVisitSubmit(event)">
+          <div class="modal-body p-4">
+            <div class="mb-3">
+              <label for="reg-nombre" class="form-label small fw-semibold text-secondary">Nombre Completo del Visitante *</label>
+              <input type="text" id="reg-nombre" required placeholder="Ej: Luis Morales Sánchez" class="form-control form-control-sm">
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label for="reg-dni" class="form-label small fw-semibold text-secondary">DNI / Documento *</label>
+                <input type="text" id="reg-dni" required maxlength="8" placeholder="74839201" class="form-control form-control-sm">
+              </div>
+              <div class="col-6">
+                <label for="reg-asunto" class="form-label small fw-semibold text-secondary">Asunto *</label>
+                <select id="reg-asunto" required class="form-select form-select-sm">
+                  <option value="Matrícula">Matrícula</option>
+                  <option value="Pagos">Pagos</option>
+                  <option value="Tutoría">Tutoría</option>
+                  <option value="Consultas de Notas">Consultas de Notas</option>
+                  <option value="Otros">Otros</option>
+                </select>
+              </div>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label for="reg-prioridad" class="form-label small fw-semibold text-secondary">Prioridad *</label>
+                <select id="reg-prioridad" required class="form-select form-select-sm">
+                  <option value="Media">Media (Estándar)</option>
+                  <option value="Alta">Alta</option>
+                  <option value="Urgente">Urgente</option>
+                  <option value="Baja">Baja</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label for="reg-empleado" class="form-label small fw-semibold text-secondary">Asignar a</label>
+                <select id="reg-empleado" class="form-select form-select-sm">
+                  <option value="Carlos Rodríguez López">Carlos Rodríguez (EMP001)</option>
+                  <option value="disponible">Dejar Disponible (Cola)</option>
+                  <option value="María Elena Quispe">María Quispe (EMP002)</option>
+                  <option value="Jorge Mendoza Soto">Jorge Mendoza (EMP003)</option>
+                </select>
+              </div>
+            </div>
+            <div class="mb-2">
+              <label for="reg-consulta" class="form-label small fw-semibold text-secondary">Detalle de Consulta *</label>
+              <textarea id="reg-consulta" required rows="3" placeholder="Describe brevemente el requerimiento del visitante..." class="form-control form-control-sm"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer border-top py-2 px-4">
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-sm btn-success fw-semibold">Generar Registro</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ======================================================== -->
+  <!-- MODAL: SIMULADOR DE CELULAR VISITANTE (QR)               -->
+  <!-- ======================================================== -->
+  <div class="modal fade" id="modalQrSimulator" tabindex="-1" aria-labelledby="modalQrSimulatorLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content border-0 shadow-sm rounded-3">
+        <div class="modal-header border-bottom py-3">
+          <h2 class="modal-title h6 fw-bold text-dark mb-0 d-flex align-items-center gap-2" id="modalQrSimulatorLabel">
+            <i class="bi bi-phone text-primary"></i>
+            <span>Auto-registro Móvil</span>
+          </h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <form id="formQrMobile" onsubmit="handleQrMobileSubmit(event)">
+          <div class="modal-body p-3">
+            <div class="mb-2">
+              <label for="qr-mob-nombre" class="form-label small fw-semibold text-secondary">Nombre y Apellidos *</label>
+              <input type="text" id="qr-mob-nombre" required placeholder="Ej: Patricia Benavides" class="form-control form-control-sm">
+            </div>
+            <div class="mb-2">
+              <label for="qr-mob-dni" class="form-label small fw-semibold text-secondary">DNI *</label>
+              <input type="text" id="qr-mob-dni" required maxlength="8" placeholder="87654321" class="form-control form-control-sm">
+            </div>
+            <div class="mb-2">
+              <label for="qr-mob-asunto" class="form-label small fw-semibold text-secondary">Trámite o Asunto *</label>
+              <select id="qr-mob-asunto" class="form-select form-select-sm">
+                <option value="Matrícula">Matrícula</option>
+                <option value="Pagos">Pagos</option>
+                <option value="Tutoría">Tutoría</option>
+                <option value="Consultas de Notas">Consultas de Notas</option>
+                <option value="Otros">Otros</option>
+              </select>
+            </div>
+            <div class="mb-2">
+              <label for="qr-mob-consulta" class="form-label small fw-semibold text-secondary">Motivo de Visita *</label>
+              <input type="text" id="qr-mob-consulta" required placeholder="Requisitos para convalidación..." class="form-control form-control-sm">
+            </div>
+          </div>
+          <div class="modal-footer border-top py-2 px-3">
+            <button type="submit" class="btn btn-sm btn-senati-primary w-100 fw-semibold">Solicitar Ticket QR</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ======================================================== -->
+  <!-- MODAL: ATENDER / RESOLVER CONSULTA (EMPLEADO)            -->
+  <!-- ======================================================== -->
+  <div class="modal fade" id="modalRespondVisit" tabindex="-1" aria-labelledby="modalRespondVisitLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-sm rounded-3">
+        <div class="modal-header border-bottom py-3">
+          <h2 class="modal-title h6 fw-bold text-dark mb-0 d-flex align-items-center gap-2" id="modalRespondVisitLabel">
+            <i class="bi bi-pencil-square text-primary"></i>
+            <span id="resp-ticket-code">Ticket V-001</span>
+          </h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <form id="formRespondVisit" onsubmit="handleRespondSubmit(event)">
+          <div class="modal-body p-4">
+            <input type="hidden" id="resp-ticket-id">
+            
+            <div class="bg-light p-3 rounded-2 border mb-3">
+              <div class="d-flex justify-content-between align-items-center small text-muted mb-1">
+                <span id="resp-visitor-info" class="fw-semibold text-dark">Visitante: Juan Pérez</span>
+                <span id="resp-prioridad-tag" class="badge bg-secondary">Alta</span>
+              </div>
+              <div class="small text-muted mb-1"><b>Asunto:</b> <span id="resp-asunto-tag" class="text-primary fw-medium">Matrícula</span></div>
+              <div class="small text-dark mt-2 p-2 bg-white rounded border">
+                <b>Consulta:</b> <span id="resp-consulta-text" class="text-muted fst-italic">Detalle...</span>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="resp-respuesta-text" class="form-label small fw-semibold text-secondary">Respuesta / Dictamen del Colaborador *</label>
+              <textarea id="resp-respuesta-text" required rows="3" placeholder="Ingresa la solución o respuesta brindada al visitante..." class="form-control form-control-sm"></textarea>
+            </div>
+
+            <div class="mb-2">
+              <label for="resp-estado-select" class="form-label small fw-semibold text-secondary">Actualizar Estado *</label>
+              <select id="resp-estado-select" required class="form-select form-select-sm">
+                <option value="Completada">Completada (Atención Concluida con Éxito)</option>
+                <option value="En Proceso">En Proceso (Seguimiento requerido)</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer border-top py-2 px-4">
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-sm btn-senati-primary fw-semibold">Guardar y Actualizar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ======================================================== -->
+  <!-- MODAL: DOCUMENTACIÓN TÉCNICA (MEMORIA TAREA 8)           -->
+  <!-- ======================================================== -->
+  <div class="modal fade" id="modalDocs" tabindex="-1" aria-labelledby="modalDocsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+      <div class="modal-content border-0 shadow-sm rounded-3">
+        <div class="modal-header border-bottom py-3">
+          <h2 class="modal-title h6 fw-bold text-dark mb-0 d-flex align-items-center gap-2" id="modalDocsLabel">
+            <i class="bi bi-journal-bookmark text-primary"></i>
+            <span>Memoria Técnica & Rúbrica T8 (Fases 1 a 4)</span>
+          </h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body p-4 small text-secondary">
+          
+          <div class="card card-flat p-3 mb-3">
+            <h3 class="h6 fw-bold text-primary mb-2">Fase 1: Capa de Presentación (Inventario UI/UX)</h3>
+            <p class="mb-1">• <b>Elementos de entrada:</b> 3 selectores de clasificación (Asunto, Estado, Prioridad) y 1 selector de fecha nativo en la barra de filtros.</p>
+            <p class="mb-1">• <b>Jerarquía Visual:</b> El código QR centralizado de 220px sobre contenedor limpio es el Call to Action primordial para autogestión sin colas.</p>
+            <p class="mb-0">• <b>Contadores en cero:</b> Representan el estado inicial sin atenciones al iniciar el turno laboral.</p>
+          </div>
+
+          <div class="card card-flat p-3 mb-3">
+            <h3 class="h6 fw-bold text-primary mb-2">Fase 2: Requerimientos y Reglas de Negocio</h3>
+            <p class="mb-1">• <b>Regla de Carga Laboral:</b> La pestaña "Visitas Disponibles" opera como cola compartida FIFO/prioridad. Los empleados toman tickets cuando tienen ventanilla libre, evitando la sobrecarga individual.</p>
+            <p class="mb-0">• <b>Ciclo de Vida:</b> Escaneo QR (created_at) → Cola Disponibles → Toma Empleado (started_at) → En Proceso → Resolución (ended_at) → Completada.</p>
+          </div>
+
+          <div class="card card-flat p-3 mb-3">
+            <h3 class="h6 fw-bold text-primary mb-2">Fase 3: Modelado de Datos y Timestamps Reversados</h3>
+            <p class="mb-1">• <b>Marcas temporales:</b> <code class="text-primary">t_registro</code> (escaneo), <code class="text-primary">t_inicio</code> (toma ticket), <code class="text-primary">t_cierre</code> (respuesta final).</p>
+            <p class="mb-0">• <b>Fórmulas:</b> Espera = AVG(t_inicio - t_registro); Resolución = AVG(t_cierre - t_inicio); Efectividad = (Completadas / Total) * 100%.</p>
+          </div>
+
+          <div class="card card-flat p-3">
+            <h3 class="h6 fw-bold text-primary mb-2">Fase 4: Dashboard Gerencial y Auditoría SLA</h3>
+            <p class="mb-0">• <b>Regla de Alerta Roja:</b> Todo ticket con espera &gt; 15.0 minutos en estado 'En Espera' dispara la alerta roja en la tabla de auditoría para su reasignación prioritaria inmediata.</p>
+          </div>
+
+        </div>
+        <div class="modal-footer border-top py-2 px-4">
+          <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ======================================================== -->
+  <!-- 4. DEPENDENCIAS DE SCRIPT NATIVAS Y LÓGICA MODULAR       -->
+  <!-- ======================================================== -->
+  <!-- Bootstrap 5 Bundle JS (Popper nativo incluido, Cero jQuery) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  <!-- Chart.js para Visualizaciones Analíticas -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Lógica de Negocio y Reactividad (JavaScript Nativo ES6+) -->
+  <script src="js/app.js"></script>
+
+</body>
+</html>

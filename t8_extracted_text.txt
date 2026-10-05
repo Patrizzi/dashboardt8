@@ -1,0 +1,244 @@
+=== PAGE 1 ===
+TAREA 8: Aplicación Real en el desarrollo de proyecto 
+ 
+ 
+  
+
+
+=== PAGE 2 ===
+Pantalla del Empleado 
+ 
+Aparte va a ver un panel de administrador que visualizara el avance de los empleados (atenciones por 
+día, mes para su reporte) 
+1. Contexto y Problemática 
+Toda institución enfrenta el reto de gestionar eficientemente el flujo de personas que ingresan a 
+sus instalaciones para realizar consultas o trámites. 
+• Saturación en Recepción: El registro manual o desorganizado de visitantes genera 
+tiempos de espera prolongados y cuellos de botella. 
+• Falta de Trazabilidad: No existe una forma centralizada de medir cuántas atenciones 
+se realizan al día ni la efectividad del personal para resolverlas. 
+• Desorganización en la Derivación: Las consultas específicas sobre temas académicos 
+o administrativos se mezclan, dificultando su asignación al empleado correcto. 
+2. Análisis de Necesidades del Área 
+Para resolver esta problemática, el área requiere una modernización integral de su proceso de 
+atención. 
+• Autogestión del Visitante: Implementar un método rápido y sin contacto para el 
+registro inicial de visitas. 
+• Clasificación Automática: Poder categorizar las visitas según el tipo de trámite, como 
+Matrícula o Pagos/Tutoría/Otros.  
+
+
+=== PAGE 3 ===
+• Medición de Desempeño: Contar con indicadores visuales que permitan a los 
+empleados y administradores monitorear la efectividad y el volumen de atenciones en 
+tiempo real.  
+3. Alternativa de Solución: Sistema de Gestión de Visitas 
+La solución desarrollada es el "Senati ETI - Sistema de Gestión de Visitas", una plataforma 
+web integral dividida en módulos estratégicos.  
+• Módulo de Auto registro: Interfaz optimizada que presenta un código QR principal, 
+permitiendo a los usuarios escanear y registrar su visita desde sus propios dispositivos.  
+• Panel de Empleado (Gestión Operativa): Un tablero de control personalizado donde 
+cada colaborador puede visualizar sus atenciones en tiempo real.  
+• Métricas de Desempeño Individual: El panel incluye indicadores clave como 
+atenciones completadas, efectividad porcentual y atenciones en proceso.  
+• Gestión de Flujo de Trabajo: Sistema de pestañas para alternar entre "Mis Visitas 
+Asignadas" y "Visitas Disponibles", permitiendo una distribución equitativa de la carga 
+laboral.  
+• Herramientas de Filtrado y Exportación: Capacidad de filtrar las atenciones por 
+asunto, estado, prioridad y fecha, además de incluir botones para exportar reportes 
+mensuales, trimestrales o filtrados.  
+• Panel de Administrador (Supervisión): Un módulo gerencial planificado para 
+visualizar el avance global de los empleados y generar reportes consolidados por día o 
+mes.  
+4. Impacto y Beneficios Esperados 
+La implementación de este sistema transformará la operatividad del área, aportando valor 
+directo a la institución. 
+• Eficiencia Operativa: La automatización del registro mediante código QR elimina las 
+colas y reduce el tiempo de espera.  
+• Toma de Decisiones Basada en Datos: La capacidad de exportar reportes y visualizar 
+métricas permite a la administración optimizar los horarios del personal según los picos 
+de demanda.  
+
+=== PAGE 4 ===
+• Mejora en la Calidad del Servicio: Al tipificar las consultas por prioridad y asunto, 
+los visitantes son atendidos de forma más rápida y precisa por el empleado adecuado.  
+Además, el panel de administrador 
+• Contara: Tiempo Promedio de Espera: El tiempo en minutos desde que el visitante 
+escanea el QR hasta que un empleado toma su ticket. 
+• Tiempo Promedio de Resolución: Cuánto tarda el personal en cerrar la consulta desde 
+que inicia la atención. 
+• Tasa de Efectividad Global: Porcentaje total de atenciones completadas exitosamente 
+frente a las consultas abandonadas, en proceso o no resueltas. 
+• Visitantes Activos en Sede: Un contador en tiempo real de cuántas personas se 
+encuentran actualmente en las instalaciones esperando o siendo atendidas. 
+2. Gráficos y Visualizaciones (Dashboard) 
+Para que la interfaz sea visualmente impactante y aplique buenas prácticas de UX/UI para 
+facilitar el análisis, te sugiero incluir: 
+• Gráfico de Líneas - Mapa de "Horas Pico": Muestra el volumen de visitas a lo largo 
+del día. Es vital en un entorno educativo para identificar los momentos de mayor 
+afluencia (por ejemplo, recesos, cambios de turno o temporadas de matrícula) y 
+reasignar personal de apoyo de manera inteligente. 
+• Gráfico de Barras - Rendimiento por Colaborador: Una comparativa mensual o 
+semanal de atenciones completadas por cada miembro del equipo. Ayuda a identificar 
+quiénes tienen sobrecarga de trabajo o quiénes son los más eficientes. 
+• Gráfico de Anillo (Donut Chart) - Distribución por Asunto: Muestra visualmente el 
+porcentaje de los motivos de visita (Matrícula, Pagos, Tutorías, Consultas de Notas, 
+etc.). Permite entender rápidamente qué procesos institucionales están generando más 
+tráfico en recepción. 
+3. Funcionalidades de Auditoría 
+• Tabla de Alertas: Una lista que destaque en rojo aquellas atenciones que han 
+sobrepasado el tiempo límite de espera establecido, permitiendo al administrador 
+intervenir si es necesario. 
+
+=== PAGE 5 ===
+Rúbrica de Evaluación: Ingeniería Inversa en 4 Fases 
+Proyecto de Referencia: Senati ETI - Sistema de Gestión de Visitas  
+Fase 1: Identificación y Análisis de la Interfaz Actual (Capa de 
+Presentación) 
+Evalúa la capacidad de deconstruir visualmente las pantallas existentes (Módulo de Auto -
+registro QR y Panel de Empleado) [1]. 
+• Sobresaliente (5 pts):  Mapea de forma exacta todos los componentes visuales de las 
+capturas (código QR, contadores de métricas en cero, filtros de clasificación, botones de 
+exportación y tabl as de asignación). Identifica con precisión los patrones de UI/UX 
+utilizados y la jerarquía visual de la interfaz del empleado. 
+• Aceptable (3 pts):  Identifica la mayoría de los componentes visuales de las pantallas, 
+pero omite analizar elementos secundarios  como los botones de exportación ("Exportar 
+Mes", "Exportar Trimestre") o el sistema de pestañas de flujo de trabajo. 
+• Insuficiente (1 pt): Solo hace una descripción superficial de las imágenes sin desglosar 
+los componentes individuales de entrada, navegación o información de la UI. 
+Fase 2: Deducción de Requerimientos Funcionales y Reglas de Negocio 
+Evalúa la reconstrucción de la lógica operativa detrás del sistema a partir de las necesidades 
+del área [1]. 
+• Sobresaliente (5 pts): Deduce correctamente el flujo lógico completo: desde el escaneo 
+del QR por el visitante (auto-registro), la clasificación automática por asunto (Matrícula, 
+Pagos/Tutoría), hasta la actualización de estados en el tablero del empleado ("Mis Visitas 
+Asignadas" vs. "Visitas Disponibles"). 
+• Aceptable (3 pts):  Define los requerimientos del sistema pero no conecta claramente 
+cómo el auto -registro del visitante afecta directamente al flujo de trabajo o a los 
+contadores de métricas del panel individual del empleado. 
+• Insuficiente (1 pt):  Confunde los requerimientos de los usuarios o enumera funciones 
+genéricas que no corresponden a la problemática de saturación y falta de trazabilidad 
+descrita. 
+Fase 3: Modelado del Módulo de Administración (Arquitectura y Datos 
+Reversados) 
+Evalúa la propuesta técnica para estructurar el panel de supervisión planificado basándose en 
+las métricas solicitadas [1]. 
+• Sobresaliente (5 pts): Diseña una estructura lógica de datos sólida (tablas/campos) capaz 
+de calcular con precisión los indicadores clave solicitados: Tiempo Promedio de Espera, 
+Tiempo Promedio de Resolución, Tasa de Efectividad Global y el contador de Visitantes 
+Activos. 
+• Aceptable (3 pts):  Propone el diseño del módulo administrativo, pero la estructura de 
+datos subyacente plantea ambigüedades p ara calcular métricas complejas basadas en 
+tiempo (como el cálculo en minutos desde el escaneo hasta la toma del ticket). 
+
+=== PAGE 6 ===
+• Insuficiente (1 pt):  No define cómo estructurar las bases de datos o ignora el diseño 
+conceptual de las variables necesarias para medir el avance global del personal. 
+ 
+Fase 4: Abstracción de Visualizaciones y Control de Auditoría 
+(Dashboard Gerencial) 
+Evalúa la capacidad de t raducir las métricas del administrador en componentes de interfaz 
+analíticos avanzados [1]. 
+• Sobresaliente (5 pts):  Plantea maquetas o especificaciones técnicas claras para la 
+integración del cuadro de mando: Gráfico de líneas para "Horas Pico", gráfico de barras 
+para rendimiento del colaborador, gráfico de anillo para distribución por asunto y una 
+tabla de alertas funcionales en rojo para tiempos límite excedidos. 
+• Aceptable (3 pts): Incluye los gráficos recomendados en su análisis, pero no justifica su 
+utilidad UX/UI o no define con claridad las condiciones lógicas que dispararían las alertas 
+de auditoría en la tabla. 
+• Insuficiente (1 pt): Omite la sección de analítica visual o propone gráficos genéricos que 
+no facilitan la toma de decisiones basada en datos para optimizar los horarios del personal. 
+ 
+¿Qué te gustaría hacer a continuación con esta rúbrica? Puedo ayudarte a: 
+1. Generar un documento descargable (exportar la rúbrica en formato estructurado para 
+tu clase o proyecto). 
+2. Crear las preguntas o entregables específicos que los alumnos deben resolver en cada 
+una de estas 4 fases. 
+3. Diseñar el mockup visual  de cómo debería lucir el "Panel de Administrador" c on sus 
+gráficos y alertas para complementar el material. 
+Por favor, responde con el número de tu opción preferida o indícame si requieres algún ajuste en 
+los puntajes. 
+Crear las preguntas o entregables específicos que los alumnos deben resolver en cada una de 
+estas 4 fases 
+Para estructurar correctamente la Tarea 8, aquí tienes la guía oficial de entregables y preguntas 
+guía dividida de forma secuencial. Los alumnos deberán responder y modelar cada punto 
+basándose estrictamente en las capturas y la problemática del sistema "Senati ETI". 
+ 
+         Guía de Entregables y Cuestionario: Ingeniería Inversa (Senati ETI) 
+
+=== PAGE 7 ===
+    Fase 1: Identificación y Análisis de la Interfaz Actual 
+Objetivo: Deconstruir visualmente la aplicación para entender cómo se estructuró la experiencia 
+de usuario (UI/UX) actual. 
+     Entregable Requerido: 
+Un Inventario de Componentes de Interfaz . El alumno debe listar y clasificar bajo la 
+metodología de Diseño UI todos los elementos visibles en las dos capturas provistas (Pantalla 
+Principal y Panel del Empleado). 
+❓ Preguntas Guía que el Alumno debe responder: 
+1. Análisis de Entrada y Control:  En la Pantalla del Empleado , identifica al menos 3 
+elementos de entrada de datos y explica cuál es su función en los filtros de clasificación. 
+2. Jerarquía Visual: ¿Qué elemento visual se ha utilizado en la interfaz del código QR para 
+denotar que el sistema es de "Autogestión" y cuál es su llamado a la acción principal (Call 
+to Action)? 
+3. Estados de la UI:  Al observar los contadores en "0" y "0%" del Panel del Empleado, 
+¿qué estado de la interfaz se está representando y qué componentes cambian 
+dinámicamente cuando un empleado empieza a resolver consultas? 
+ 
+    Fase 2: Deducción de Requerimientos y Reglas de Negocio 
+Objetivo: Reconstruir el mapa de procesos del software a partir de la problemática institucional 
+planteada. 
+     Entregable Requerido: 
+Un Diagrama de Flujo de Datos (DFD) o Mapa de Procesos que ilustre el viaje completo del 
+ticket, desde que el visitante escanea el código hasta que el empleado interactúa con él en la tabla 
+de acciones. 
+❓ Preguntas Guía que el Alumno debe responder: 
+1. Lógica de Derivación:  Según la problemática de "Desorganización en la D erivación", 
+¿cómo interactúan los filtros de "Asunto" (Matrícula, Pagos, etc.) con la separación de 
+pestañas entre "Mis Visitas Asignadas" y "Visitas Disponibles"? 
+2. Ciclo de Vida del Registro: Describe paso a paso qué ocurre en el sistema (por detrás) 
+en el momento exacto en que un usuario interactúa con el botón "Registrar Visita". 
+
+=== PAGE 8 ===
+3. Regla de Carga Laboral: Justifique técnicamente cómo el sistema de pestañas del Panel 
+del Empleado ayuda a lograr una "distribución equitativa de la carga laboral" en la 
+oficina. 
+ 
+      Fase 3: Modelado del Módulo de Administración (Backend y Datos) 
+Objetivo: Diseñar la estructura lógica y la base de datos que dará soporte al nuevo panel 
+gerencial de supervisión. 
+     Entregable Requerido: 
+Un Diccionario de Datos o Modelo Entidad-Relación (MER) preliminar que incluya las tablas, 
+campos y tipos de datos necesarios para calcular las métricas de control gerencial solicitadas. 
+❓ Preguntas Guía que el Alumno debe responder: 
+1. Cálculo de Tiempos: Para obtener el Tiempo Promedio de Espera y el Tiempo Promedio 
+de Resolución, ¿qué marcas de tiempo (timestamps) específicas debe registrar la base de 
+datos y en qué eventos exactos del sistema se deben disparar? 
+2. Métrica de Concurrencia:  Proponga un algoritmo o pseudocódigo sencillo que 
+determine matemáticamente la cantidad de Visitantes Activos en Sede en tiempo real. 
+3. Cálculo de Efectividad: ¿Qué campos y estados de atención de la tabla Visitas se deben 
+contabilizar para calcular la Tasa de Efectividad Global (considerando consultas exitosas 
+vs. abandonadas o no resueltas)? 
+ 
+    Fase 4: Abstracción de Visualizaciones y Auditoría 
+Objetivo: Traducir los datos crudos del backend en un Dashboard ejecutivo que optimice la toma 
+de decisiones. 
+     Entregable Requerido: 
+Un Wireframe o Boceto de Alta Fidelidad del nuevo Panel de Administrador que incorpore de 
+manera armónica los gráficos sugeridos y la tabla de control de alertas. 
+ 
+ 
+
+=== PAGE 9 ===
+❓ Preguntas Guía que el Alumno debe responder: 
+1. Optimización de Personal: Explique cómo el gráfico de líneas "Mapa de Horas Pico" le 
+permite a la administración  mitigar la Saturación en Recepción  durante los recesos o 
+temporadas de matrícula. 
+2. Detección de Cuellos de Botella: ¿Qué dimensiones o variables de datos cruzados debe 
+analizar el gráfico de anillo ("Distribución por Asunto") para entender qué trámites 
+institucionales están retrasando la atención? 
+3. Lógica de Auditoría:  Defina la regla de negocio para la Tabla de Alertas : ¿Cuántos 
+minutos de tolerancia máxima se deben configurar antes de que el estado de un visitante 
+se resalte automáticamente en rojo, y qué acciones inmediatas debería permitirle realizar 
+al administrador? 
+ 
+
