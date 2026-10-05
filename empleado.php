@@ -123,6 +123,9 @@ unset($_SESSION['toast']);
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
+  <!-- SweetAlert2 (CSS Oficial) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
   <!-- Estilos Corporativos SENATI -->
   <link rel="stylesheet" href="css/senati-theme.css">
 </head>
@@ -170,25 +173,25 @@ unset($_SESSION['toast']);
       <div class="col-6 col-md-4 col-xl-2">
         <div class="kpi-card">
           <div class="kpi-title">Mis Atenciones</div>
-          <div class="kpi-value text-primary"><?php echo $empTotal; ?></div>
+          <div class="kpi-value text-primary" id="kpi-activos"><?php echo $empTotal; ?></div>
         </div>
       </div>
       <div class="col-6 col-md-4 col-xl-2">
         <div class="kpi-card">
           <div class="kpi-title">Completadas</div>
-          <div class="kpi-value text-success"><?php echo $empCompletadas; ?></div>
+          <div class="kpi-value text-success" id="kpi-completadas-hoy"><?php echo $empCompletadas; ?></div>
         </div>
       </div>
       <div class="col-6 col-md-4 col-xl-2">
         <div class="kpi-card">
           <div class="kpi-title">Efectividad</div>
-          <div class="kpi-value text-dark"><?php echo $empEfectividad; ?>%</div>
+          <div class="kpi-value text-dark" id="kpi-efectividad"><?php echo $empEfectividad; ?>%</div>
         </div>
       </div>
       <div class="col-6 col-md-4 col-xl-2">
         <div class="kpi-card">
           <div class="kpi-title">En Proceso</div>
-          <div class="kpi-value text-warning"><?php echo $empEnProceso; ?></div>
+          <div class="kpi-value text-warning" id="kpi-en-proceso"><?php echo $empEnProceso; ?></div>
         </div>
       </div>
       <div class="col-6 col-md-4 col-xl-2">
@@ -289,9 +292,8 @@ unset($_SESSION['toast']);
       </li>
       <li class="nav-item">
         <a href="?tab=disponibles" class="nav-link <?php echo ($tab === 'disponibles') ? 'active' : ''; ?> d-flex align-items-center gap-2">
-          <i class="bi bi-inbox"></i>
-          <span>Visitas Disponibles</span>
-          <span class="badge bg-secondary rounded-pill small"><?php echo $disponiblesCount; ?></span>
+          <i class="bi           <span>Visitas Disponibles</span>
+          <span class="badge bg-secondary rounded-pill small" id="badge-cola-disponible"><?php echo $disponiblesCount; ?></span>
         </a>
       </li>
     </ul>
@@ -307,7 +309,7 @@ unset($_SESSION['toast']);
           <?php endif; ?>
         </h3>
         <p class="text-muted small mb-0">
-          <?php echo ($tab === 'asignadas') ? 'Responde las consultas y actualiza el estado de las visitas.' : 'Toma tickets de la cola para una distribución equitativa de carga laboral.'; ?>
+          <?php echo ($tab === 'asignadas') ? 'Responde las consultas y actualiza el estado de las visitas sin recargar la página.' : 'Toma tickets de la cola para una distribución equitativa de carga laboral.'; ?>
         </p>
       </div>
 
@@ -326,7 +328,7 @@ unset($_SESSION['toast']);
               <th scope="col" class="text-center">Acciones</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="<?php echo ($tab === 'disponibles') ? 'tbody-disponibles' : 'tbody-asignadas'; ?>">
             <?php 
             $listaActual = ($tab === 'asignadas') ? $visitasAsignadas : $visitasDisponibles;
             if (!empty($listaActual)): 
@@ -342,7 +344,7 @@ unset($_SESSION['toast']);
                   default => 'badge-subtle-danger'
                 };
             ?>
-              <tr>
+              <tr id="fila-ticket-<?php echo $v['id']; ?>">
                 <td class="fw-bold font-monospace text-dark"><?php echo htmlspecialchars($v['codigo']); ?></td>
                 <td>
                   <div class="fw-semibold text-dark"><?php echo htmlspecialchars($v['visitante']); ?></div>
@@ -356,32 +358,43 @@ unset($_SESSION['toast']);
                   <?php echo !empty($v['respuesta']) ? htmlspecialchars($v['respuesta']) : '<span class="text-muted fst-italic">Pendiente</span>'; ?>
                 </td>
                 <td><span class="badge <?php echo $badgePrioridad; ?> px-2 py-1 rounded-pill"><?php echo htmlspecialchars($v['prioridad']); ?></span></td>
-                <td><span class="badge <?php echo $badgeEstado; ?> px-2 py-1 rounded-pill"><?php echo htmlspecialchars($v['estado']); ?></span></td>
+                <td><span class="badge <?php echo $badgeEstado; ?> px-2 py-1 rounded-pill badge-estado"><?php echo htmlspecialchars($v['estado']); ?></span></td>
                 <td class="text-nowrap small text-muted">
                   <div><?php echo htmlspecialchars($v['fecha_registro']); ?></div>
                   <div class="text-secondary small"><?php echo htmlspecialchars($v['hora_registro']); ?></div>
                 </td>
-                <td class="text-center">
+                <td class="text-center celda-acciones">
                   <?php if ($tab === 'asignadas'): ?>
-                    <button type="button" class="btn btn-sm btn-outline-primary py-1 px-2.5 rounded-2 d-inline-flex align-items-center gap-1"
-                            onclick="cargarModalRespuesta(<?php echo htmlspecialchars(json_encode($v)); ?>)">
-                      <i class="bi bi-pencil-square"></i>
-                      <span>Atender</span>
-                    </button>
+                    <?php if ($v['estado'] !== 'Completada' && $v['estado'] !== 'Cancelada'): ?>
+                      <div class="d-flex justify-content-center align-items-center gap-1.5">
+                        <button type="button" class="btn btn-sm btn-outline-primary py-1 px-2 rounded-2 d-inline-flex align-items-center gap-1"
+                                title="Atender consulta y registrar dictamen"
+                                onclick="completarAtencionAjax(<?php echo $v['id']; ?>, '<?php echo $v['codigo']; ?>', '<?php echo htmlspecialchars($v['visitante'], ENT_QUOTES); ?>')">
+                          <i class="bi bi-check2-circle"></i>
+                          <span>Atender</span>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger py-1 px-2 rounded-2 d-inline-flex align-items-center gap-1"
+                                title="Marcar como abandonado"
+                                onclick="cancelarTicketAjax(<?php echo $v['id']; ?>, '<?php echo $v['codigo']; ?>')">
+                          <i class="bi bi-x-circle"></i>
+                          <span class="d-none d-md-inline">Abandonado</span>
+                        </button>
+                      </div>
+                    <?php else: ?>
+                      <span class="badge bg-light text-secondary border small">
+                        <i class="bi bi-check2-all text-success me-1"></i> <?php echo $v['estado']; ?>
+                      </span>
+                    <?php endif; ?>
                   <?php else: ?>
-                    <form method="POST" action="acciones.php">
-                      <input type="hidden" name="accion" value="tomar_ticket">
-                      <input type="hidden" name="visita_id" value="<?php echo $v['id']; ?>">
-                      <input type="hidden" name="empleado_id" value="<?php echo $empleadoId; ?>">
-                      <button type="submit" class="btn btn-sm btn-senati-primary py-1 px-2.5 rounded-2 d-inline-flex align-items-center gap-1">
-                        <i class="bi bi-hand-index-thumb"></i>
-                        <span>Tomar Ticket</span>
-                      </button>
-                    </form>
+                    <button type="button" class="btn btn-sm btn-senati-primary py-1 px-2.5 rounded-2 d-inline-flex align-items-center gap-1"
+                            onclick="tomarTicketAjax(<?php echo $v['id']; ?>, '<?php echo $v['codigo']; ?>')">
+                      <i class="bi bi-hand-index-thumb"></i>
+                      <span>Tomar Ticket</span>
+                    </button>
                   <?php endif; ?>
                 </td>
               </tr>
-            <?php endforeach; else: ?>
+            <?php endforeach; else: ?>foreach; else: ?>
               <tr>
                 <td colspan="9" class="p-5 text-center text-muted">
                   <i class="bi bi-inbox fs-2 text-secondary opacity-50 mb-2 d-block"></i>
@@ -407,8 +420,7 @@ unset($_SESSION['toast']);
           </h2>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
-        <form method="POST" action="acciones.php">
-          <input type="hidden" name="accion" value="registrar_visita">
+        <form id="formModalRegisterVisit">
           <div class="modal-body p-4">
             <div class="mb-3">
               <label for="reg-nombre" class="form-label small fw-semibold text-secondary">Nombre Completo del Visitante *</label>
@@ -416,8 +428,8 @@ unset($_SESSION['toast']);
             </div>
             <div class="row g-2 mb-3">
               <div class="col-6">
-                <label for="reg-dni" class="form-label small fw-semibold text-secondary">DNI / Documento *</label>
-                <input type="text" name="dni" id="reg-dni" required maxlength="8" placeholder="74839201" class="form-control form-control-sm">
+                <label for="reg-dni" class="form-label small fw-semibold text-secondary">DNI / Documento</label>
+                <input type="text" name="dni" id="reg-dni" maxlength="15" placeholder="8 dígitos" class="form-control form-control-sm">
               </div>
               <div class="col-6">
                 <label for="reg-asunto" class="form-label small fw-semibold text-secondary">Asunto *</label>
@@ -439,10 +451,10 @@ unset($_SESSION['toast']);
                 </select>
               </div>
               <div class="col-6">
-                <label for="reg-empleado" class="form-label small fw-semibold text-secondary">Asignar a</label>
+                <label for="reg-empleado" class="form-label small fw-semibold text-secondary">Asignación</label>
                 <select name="empleado_id" id="reg-empleado" class="form-select form-select-sm">
+                  <option value="disponible">Cola Compartida (Disponible)</option>
                   <option value="<?php echo $empleadoId; ?>">Asignármelo a mí (En Proceso)</option>
-                  <option value="disponible">Dejar en Cola (Disponible)</option>
                 </select>
               </div>
             </div>
@@ -453,7 +465,10 @@ unset($_SESSION['toast']);
           </div>
           <div class="modal-footer border-top py-2 px-4">
             <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-sm btn-success fw-semibold">Generar Registro</button>
+            <button type="submit" class="btn btn-sm btn-success fw-semibold d-inline-flex align-items-center gap-1.5">
+              <i class="bi bi-check-circle"></i>
+              <span>Generar Registro</span>
+            </button>
           </div>
         </form>
       </div>
@@ -471,8 +486,7 @@ unset($_SESSION['toast']);
           </h2>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
-        <form method="POST" action="acciones.php">
-          <input type="hidden" name="accion" value="atender_ticket">
+        <form id="formModalRespond">
           <input type="hidden" name="visita_id" id="resp-ticket-id">
           
           <div class="modal-body p-4">
@@ -502,30 +516,27 @@ unset($_SESSION['toast']);
           </div>
           <div class="modal-footer border-top py-2 px-4">
             <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-sm btn-senati-primary fw-semibold">Guardar y Actualizar</button>
+            <button type="submit" class="btn btn-sm btn-senati-primary fw-semibold d-inline-flex align-items-center gap-1.5">
+              <i class="bi bi-save"></i>
+              <span>Guardar y Finalizar</span>
+            </button>
           </div>
         </form>
       </div>
     </div>
   </div>
 
-  <!-- Toast Notificaciones -->
-  <?php if ($toast): ?>
-    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1090;">
-      <div class="toast align-items-center text-bg-<?php echo htmlspecialchars($toast['tipo']); ?> border-0 show shadow-sm" role="alert">
-        <div class="d-flex">
-          <div class="toast-body small"><?php echo htmlspecialchars($toast['mensaje']); ?></div>
-          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
-      </div>
-    </div>
-  <?php endif; ?>
-
   <footer class="bg-white border-top py-2 px-4 text-center text-muted small mt-auto">
     SENATI ETI • Panel de Empleado • Sistema de Gestión de Visitas
   </footer>
 
+  <!-- SweetAlert2 Oficial JS -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Bootstrap 5 Bundle JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Script SENATI UX (Fetch + SweetAlert2) -->
+  <script src="js/senati-ux.js"></script>
+
   <script>
     function cargarModalRespuesta(visita) {
       document.getElementById('resp-ticket-id').value = visita.id;
@@ -541,6 +552,89 @@ unset($_SESSION['toast']);
       const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
       modal.show();
     }
+
+    // Manejar envío asíncrono del modal de registro de visita
+    document.addEventListener('DOMContentLoaded', () => {
+      const formModalReg = document.getElementById('formModalRegisterVisit');
+      if (formModalReg) {
+        formModalReg.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const btn = formModalReg.querySelector('button[type="submit"]');
+          btn.disabled = true;
+          try {
+            const formData = new FormData(formModalReg);
+            const res = await fetch('ajax_registrar.php', { method: 'POST', body: formData });
+            const data = await res.json();
+            if (res.ok && data.status === 'success') {
+              const modalEl = document.getElementById('modalRegisterVisit');
+              bootstrap.Modal.getInstance(modalEl).hide();
+              formModalReg.reset();
+              await SenatiUX.showTicketVoucher(data.data);
+              // Recargar suavemente para reflejar en la pestaña activa
+              window.location.reload();
+            } else {
+              SenatiUX.alertError('Error', data.message);
+            }
+          } catch (err) {
+            SenatiUX.alertError('Error de Conexión', 'No se pudo registrar la visita.');
+          } finally {
+            btn.disabled = false;
+          }
+        });
+      }
+
+      // Manejar envío asíncrono del modal de atención/respuesta
+      const formModalResp = document.getElementById('formModalRespond');
+      if (formModalResp) {
+        formModalResp.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const ticketId = document.getElementById('resp-ticket-id').value;
+          const respuesta = document.getElementById('resp-respuesta-text').value.trim();
+          const estado = document.getElementById('resp-estado-select').value;
+
+          if (!respuesta) {
+            SenatiUX.alertError('Campo Requerido', 'Por favor ingresa la respuesta o dictamen de la atención.');
+            return;
+          }
+
+          try {
+            const res = await fetch('ajax_actualizar_estado.php', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                accion: (estado === 'Completada') ? 'completar' : 'en_proceso',
+                ticket_id: ticketId,
+                respuesta: respuesta
+              })
+            });
+
+            const data = await res.json();
+            if (res.ok && data.status === 'success') {
+              const modalEl = document.getElementById('modalRespondVisit');
+              bootstrap.Modal.getInstance(modalEl).hide();
+              await SenatiUX.alertSuccess('¡Atención Actualizada!', data.message);
+              
+              // Actualizar fila en el DOM
+              const fila = document.getElementById(`fila-ticket-${ticketId}`);
+              if (fila) {
+                const badge = fila.querySelector('.badge-estado');
+                if (badge) {
+                  badge.className = (estado === 'Completada') 
+                    ? 'badge badge-subtle-success px-2 py-1 rounded-pill badge-estado' 
+                    : 'badge badge-subtle-warning px-2 py-1 rounded-pill badge-estado';
+                  badge.textContent = estado;
+                }
+              }
+              SenatiUX.updateKpiBadges(data.kpis);
+            } else {
+              SenatiUX.alertError('Error', data.message);
+            }
+          } catch (err) {
+            SenatiUX.alertError('Error', 'No se pudo actualizar el estado de la visita.');
+          }
+        });
+      }
+    });
   </script>
 </body>
 </html>

@@ -118,6 +118,9 @@ unset($_SESSION['toast']);
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
+  <!-- SweetAlert2 (CSS Oficial) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
   <!-- Estilos Corporativos SENATI -->
   <link rel="stylesheet" href="css/senati-theme.css">
 </head>
@@ -317,14 +320,10 @@ unset($_SESSION['toast']);
                     </td>
                     <td><span class="badge badge-subtle-warning"><?php echo htmlspecialchars($al['prioridad']); ?></span></td>
                     <td class="text-center">
-                      <form method="POST" action="acciones.php">
-                        <input type="hidden" name="accion" value="reasignar_alerta">
-                        <input type="hidden" name="visita_id" value="<?php echo $al['id']; ?>">
-                        <input type="hidden" name="empleado_id" value="1">
-                        <button type="submit" class="btn btn-sm btn-danger py-0 px-2 rounded-2 small">
-                          Asignar Urgente
-                        </button>
-                      </form>
+                      <button type="button" class="btn btn-sm btn-danger py-0 px-2 rounded-2 small"
+                              onclick="confirmarReasignarUrgente(<?php echo $al['id']; ?>, '<?php echo $al['codigo']; ?>', '<?php echo htmlspecialchars($al['visitante'], ENT_QUOTES); ?>', <?php echo $al['minutos_espera']; ?>)">
+                        Asignar Urgente
+                      </button>
                     </td>
                   </tr>
                 <?php endforeach; else: ?>
@@ -523,6 +522,49 @@ unset($_SESSION['toast']);
         });
       }
     });
+
+    async function confirmarReasignarUrgente(id, codigo, visitante, espera) {
+      const confirmado = await Swal.fire({
+        title: '¿Reasignar Alerta Crítica?',
+        text: `El ticket ${codigo} (${visitante}) ha superado el SLA con ${espera} min de espera. ¿Deseas reasignarlo inmediatamente con prioridad máxima a ventanilla?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'Sí, reasignar urgente',
+        cancelButtonText: 'Cancelar'
+      }).then(r => r.isConfirmed);
+
+      if (!confirmado) return;
+
+      try {
+        const res = await fetch('ajax_actualizar_estado.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            accion: 'derivar',
+            ticket_id: id,
+            empleado_id: 1
+          })
+        });
+        const data = await res.json();
+        if (res.ok && data.status === 'success') {
+          await Swal.fire({
+            icon: 'success',
+            title: '¡Ticket Reasignado!',
+            text: data.message,
+            confirmButtonColor: '#003882'
+          });
+          window.location.reload();
+        } else {
+          Swal.fire({ icon: 'error', title: 'Error', text: data.message, confirmButtonColor: '#003882' });
+        }
+      } catch(e) {
+        Swal.fire({ icon: 'error', title: 'Error de Servidor', text: 'No se pudo reasignar el ticket.', confirmButtonColor: '#003882' });
+      }
+    }
   </script>
+  <!-- SweetAlert2 Oficial JS -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>
